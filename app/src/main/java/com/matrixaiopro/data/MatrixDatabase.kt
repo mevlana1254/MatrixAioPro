@@ -34,6 +34,18 @@ interface MatrixDao {
 
     @Insert
     suspend fun insertTask(task: Task)
+
+    @Query("DELETE FROM tasks WHERE id = :taskId")
+    suspend fun deleteTask(taskId: Long)
+
+    @Query("UPDATE tasks SET isCompleted = :completed WHERE id = :taskId")
+    suspend fun updateTaskStatus(taskId: Long, completed: Boolean)
+
+    @Query("DELETE FROM notes WHERE id = :noteId")
+    suspend fun deleteNote(noteId: Long)
+
+    @Query("UPDATE notes SET content = :content, timestamp = :timestamp WHERE id = :noteId")
+    suspend fun updateNote(noteId: Long, content: String, timestamp: Long)
 }
 
 @Database(entities = [Note::class, NotificationLog::class, FinanceTransaction::class, Task::class], version = 1, exportSchema = false)

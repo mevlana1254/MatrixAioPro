@@ -17,8 +17,8 @@ sealed class BottomNavItem(
     val icon: ImageVector
 ) {
     object Notes : BottomNavItem("notes", "Notes", Icons.Default.Edit)
-    object Pinnit : BottomNavItem("pinnit", "Pinnit", Icons.Default.PushPin)
-    object NotifLog : BottomNavItem("notif_log", "NotifLog", Icons.Default.History)
+    object Pinnit : BottomNavItem("pinnit", "Pinned", Icons.Default.PushPin)
+    object NotifLog : BottomNavItem("notif_log", "Logs", Icons.Default.History)
     object Finance : BottomNavItem("finance", "Finance", Icons.Default.AttachMoney)
     object Drawing : BottomNavItem("drawing", "Drawing", Icons.Default.Brush)
     object Shopping : BottomNavItem("shopping", "Shopping", Icons.Default.ShoppingCart)
