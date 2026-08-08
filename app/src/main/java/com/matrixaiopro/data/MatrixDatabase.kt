@@ -1,21 +1,19 @@
 package com.matrixaiopro.data
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MatrixDao {
     @Query("SELECT * FROM notes ORDER BY timestamp DESC")
-    fun getAllNotes(): Flow<List<Note>>
+    fun getAllNotes(): Flow<List<MatrixKeepNote>>
 
-    @Insert
-    suspend fun insertNote(note: Note)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNote(note: MatrixKeepNote)
+
+    @Query("DELETE FROM notes WHERE id = :noteId")
+    suspend fun deleteNote(noteId: Long)
 
     @Query("SELECT * FROM notification_logs ORDER BY timestamp DESC")
     fun getAllNotificationLogs(): Flow<List<NotificationLog>>
@@ -32,7 +30,7 @@ interface MatrixDao {
     @Query("SELECT * FROM tasks")
     fun getAllTasks(): Flow<List<Task>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 
     @Query("DELETE FROM tasks WHERE id = :taskId")
@@ -40,15 +38,9 @@ interface MatrixDao {
 
     @Query("UPDATE tasks SET isCompleted = :completed WHERE id = :taskId")
     suspend fun updateTaskStatus(taskId: Long, completed: Boolean)
-
-    @Query("DELETE FROM notes WHERE id = :noteId")
-    suspend fun deleteNote(noteId: Long)
-
-    @Query("UPDATE notes SET content = :content, timestamp = :timestamp WHERE id = :noteId")
-    suspend fun updateNote(noteId: Long, content: String, timestamp: Long)
 }
 
-@Database(entities = [Note::class, NotificationLog::class, FinanceTransaction::class, Task::class], version = 1, exportSchema = false)
+@Database(entities = [MatrixKeepNote::class, NotificationLog::class, FinanceTransaction::class, Task::class], version = 1, exportSchema = false)
 abstract class MatrixDatabase : RoomDatabase() {
     abstract fun matrixDao(): MatrixDao
 
